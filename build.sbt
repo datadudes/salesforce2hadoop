@@ -17,10 +17,10 @@ libraryDependencies ++= Seq(
   "com.force.api"               % "force-wsc"         % "33.0.1" exclude("org.antlr", "ST4"),
   "com.force.api"               % "force-partner-api" % "33.0.1",
   "com.datadudes"               %% "wsdl2avro"        % "0.2-SNAPSHOT" changing(),
-  "org.kitesdk"                 % "kite-hadoop-cdh5-dependencies" % "0.17.1" pomOnly()
+  "org.kitesdk"                 % "kite-hadoop-cdh5-dependencies" % "1.0.0" pomOnly()
     exclude("commons-beanutils", "commons-beanutils")
     exclude("org.slf4j", "slf4j-log4j12"),
-  "org.kitesdk"                 % "kite-data-core"    % "0.17.1",
+  "org.kitesdk"                 % "kite-data-core"    % "1.0.0",
   "com.github.scopt"            %% "scopt"            % "3.3.0",
   "org.specs2"                  %% "specs2-junit"     % "2.4.15"    % "test"
 )
