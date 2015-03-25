@@ -1,19 +1,16 @@
 package com.datadudes.sf2hadoop
 
 import java.io.IOException
-import java.net.URI
 import java.util.Calendar
 import javax.xml.bind.DatatypeConverter._
 
 import com.datadudes.sf2hadoop.SFImportCLIRunner.Config
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.{Path, FileSystem}
+import org.apache.hadoop.fs.Path
 
 class ImportState(config: Config) {
 
-  val stateFile = if(config.stateFile.toString.startsWith("hdfs")) {
-      new Path(new URI(config.stateFile.getScheme, null, config.nnHostname, config.nnPort, config.stateFile.getPath, null, null))
-  } else new Path(config.stateFile)
+  val stateFile = new Path(config.stateFile)
 
   val fs = stateFile.getFileSystem(new Configuration())
 

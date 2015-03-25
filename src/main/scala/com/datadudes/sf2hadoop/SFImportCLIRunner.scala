@@ -13,8 +13,6 @@ object SFImportCLIRunner extends App with LazyLogging {
   case class Config(command: String = "",
                     sfUsername: String = "",
                     sfPassword: String = "",
-                    nnHostname: String = "127.0.0.1",
-                    nnPort: Int = 8020,
                     datasetBasePath: String = "",
                     sfWSDL: File = new File("."),
                     stateFile: URI = new URI("file://" + System.getProperty("user.home") + "/.sf2hadoop/state"),
@@ -27,8 +25,6 @@ object SFImportCLIRunner extends App with LazyLogging {
     note("\n")
     opt[String]('u', "username") required() action { (x, c) => c.copy(sfUsername = x)} text "Salesforce username"
     opt[String]('p', "password") required() action { (x, c) => c.copy(sfPassword = x)} text "Salesforce password"
-    opt[String]('h', "host") optional() action { (x, c) => c.copy(nnHostname = x)} text "NodeName hostname/IP"
-    opt[Int]('o', "port") optional() action { (x, c) => c.copy(nnPort = x)} text "NodeName port"
     opt[String]('b', "basepath") required() action { (x, c) => c.copy(datasetBasePath = x)} text "Datasets basepath"
     opt[File]('w', "wsdl") required() valueName "<file>" action { (x, c) => c.copy(sfWSDL = x)} text "Path to Salesforce Enterprise WSDL"
     opt[URI]('s', "state") optional() valueName "<URI>" action { (x, c) => c.copy(stateFile = x)} text "URI to state file to keep track of last updated timestamps"
@@ -48,7 +44,7 @@ object SFImportCLIRunner extends App with LazyLogging {
     } else {
       val schemas = WSDL2Avro.convert(config.sfWSDL.getCanonicalPath, filterSFInternalFields)
       val connection = new SalesforceConnection(config.sfUsername, config.sfPassword)
-      val importer = new SFImporter(schemas, config.nnHostname, config.nnPort, config.datasetBasePath, connection)
+      val importer = new SFImporter(schemas, config.datasetBasePath, connection)
       val state = new ImportState(config)
       state.createDirs
 

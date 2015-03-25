@@ -9,12 +9,10 @@ import com.typesafe.scalalogging.LazyLogging
 import org.apache.avro.Schema
 
 class SFImporter(recordSchemas: Map[String, Schema],
-                 nnHostname: String,
-                 nnPort: Int,
                  basePath: String,
                  sfConnection: SalesforceConnection) extends LazyLogging {
 
-  val hdfsBasePath = if(basePath.endsWith("/")) basePath else basePath + "/"
+  val fsBasePath = if(basePath.endsWith("/")) basePath else basePath + "/"
 
   def initialImport(recordType: String) = {
     val schema = recordSchemas(recordType)
@@ -50,7 +48,7 @@ class SFImporter(recordSchemas: Map[String, Schema],
     s"SELECT $fieldList FROM $recordType ORDER BY CreatedDate DESC"
   }
 
-  private def datasetUri(recordType: String) = s"dataset:hdfs://$nnHostname:$nnPort$basePath${recordType.toLowerCase}"
+  private def datasetUri(recordType: String) = s"dataset:$fsBasePath${recordType.toLowerCase}"
 
 
 }
