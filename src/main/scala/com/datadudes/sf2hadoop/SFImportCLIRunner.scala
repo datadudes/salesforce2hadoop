@@ -10,8 +10,12 @@ import com.typesafe.scalalogging.LazyLogging
 
 object SFImportCLIRunner extends App with LazyLogging {
 
-  case class Config(command: String = "", sfUsername: String = "", sfPassword: String = "",
-                    nnHostname: String = "127.0.0.1", nnPort: Int = 8020, datasetBasePath: String = "",
+  case class Config(command: String = "",
+                    sfUsername: String = "",
+                    sfPassword: String = "",
+                    nnHostname: String = "127.0.0.1",
+                    nnPort: Int = 8020,
+                    datasetBasePath: String = "",
                     sfWSDL: File = new File("."),
                     stateFile: URI = new URI("file://" + System.getProperty("user.home") + "/.sf2hadoop/state"),
                     records: Seq[String] = Seq())
@@ -39,7 +43,7 @@ object SFImportCLIRunner extends App with LazyLogging {
   }
 
   def handleCommand(config: Config) = {
-    if(config.command.isEmpty) {
+    if(config.command.isEmpty || (config.command.trim != "init" && config.command.trim != "update")) {
       println("You need to enter a valid command (init|update)")
     } else {
       val schemas = WSDL2Avro.convert(config.sfWSDL.getCanonicalPath, filterSFInternalFields)
@@ -48,8 +52,9 @@ object SFImportCLIRunner extends App with LazyLogging {
       val state = new ImportState(config)
       state.createDirs
 
+      val existingStates = state.readStates
+
       if(config.command == "init") {
-        val existingStates = state.readStates
         val newStates = config.records.map { recordType =>
           val now = Calendar.getInstance()
           importer.initialImport(recordType)
@@ -59,7 +64,6 @@ object SFImportCLIRunner extends App with LazyLogging {
         state.saveStates(updatedStates)
       }
       else {
-        val existingStates = state.readStates
         val newStates = config.records.flatMap { recordType =>
           existingStates.get(recordType) match {
             case Some(previous) => {

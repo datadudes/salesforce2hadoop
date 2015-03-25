@@ -17,7 +17,7 @@ object Conversion {
     }.build()
   }
 
-  def convertFieldToType(sfFieldObject: Object, avroField: Schema.Field) = {
+  private def convertFieldToType(sfFieldObject: Object, avroField: Schema.Field) = {
     val avroType = if(avroField.schema().getType == Type.UNION)
       avroField.schema().getTypes.filter(t => t.getType != Type.NULL).head.getType
     else

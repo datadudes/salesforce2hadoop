@@ -8,7 +8,10 @@ import com.datadudes.sf2hadoop.AvroUtils._
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.avro.Schema
 
-class SFImporter(recordSchemas: Map[String, Schema], nnHostname: String, nnPort: Int, basePath: String,
+class SFImporter(recordSchemas: Map[String, Schema],
+                 nnHostname: String,
+                 nnPort: Int,
+                 basePath: String,
                  sfConnection: SalesforceConnection) extends LazyLogging {
 
   val hdfsBasePath = if(basePath.endsWith("/")) basePath else basePath + "/"
