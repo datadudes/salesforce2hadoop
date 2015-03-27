@@ -1,26 +1,14 @@
-package com.datadudes.sf2hadoop
+package co.datadudes.sf2hadoop
 
 import java.util.Calendar
 
-import com.sforce.soap.partner.sobject.SObject
 import com.sforce.soap.partner.Connector
+import com.sforce.soap.partner.sobject.SObject
 import com.sforce.ws.ConnectorConfig
+import com.sforce.soap.partner.PartnerConnection
 
-class SalesforceConnection(username: String, password: String, apiVersion: Double = 32.0)  {
+class SalesforceService(connection: PartnerConnection)  {
 
-  private val config = {
-    val config = new ConnectorConfig()
-    config.setUsername(username)
-    config.setPassword(password)
-    config.setAuthEndpoint(s"https://login.salesforce.com/services/Soap/u/$apiVersion")
-    config
-  }
-
-  private val connection = {
-    val conn = Connector.newConnection(config)
-    conn.setQueryOptions(2000)
-    conn
-  }
 
   def query(q: String) = new Iterator[SObject] {
 
@@ -54,4 +42,17 @@ class SalesforceConnection(username: String, password: String, apiVersion: Doubl
     override def next(): SObject = batch.next()
   }
 
+}
+
+object SalesforceService {
+  def apply(username: String, password: String, apiVersion: String = "32.0") = {
+    val config = new ConnectorConfig()
+    config.setUsername(username)
+    config.setPassword(password)
+    config.setAuthEndpoint(s"https://login.salesforce.com/services/Soap/u/$apiVersion")
+
+    val conn = Connector.newConnection(config)
+    conn.setQueryOptions(2000)
+    new SalesforceService(conn)
+  }
 }

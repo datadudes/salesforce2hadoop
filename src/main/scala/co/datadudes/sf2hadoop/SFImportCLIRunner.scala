@@ -1,10 +1,9 @@
-package com.datadudes.sf2hadoop
+package co.datadudes.sf2hadoop
 
 import java.io.File
 import java.net.URI
 import java.util.Calendar
-
-import com.datadudes.wsdl2avro.WSDL2Avro
+import co.datadudes.wsdl2avro.WSDL2Avro
 import AvroUtils._
 import com.typesafe.scalalogging.LazyLogging
 
@@ -43,7 +42,7 @@ object SFImportCLIRunner extends App with LazyLogging {
       println("You need to enter a valid command (init|update)")
     } else {
       val schemas = WSDL2Avro.convert(config.sfWSDL.getCanonicalPath, filterSFInternalFields)
-      val connection = new SalesforceConnection(config.sfUsername, config.sfPassword)
+      val connection = SalesforceService(config.sfUsername, config.sfPassword)
       val importer = new SFImporter(schemas, config.datasetBasePath, connection)
       val state = new ImportState(config)
       state.createDirs

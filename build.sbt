@@ -1,6 +1,6 @@
 name := "salesforce2hadoop"
 
-organization := "com.datadudes"
+organization := "co.datadudes"
 
 version := "0.1-SNAPSHOT"
 
@@ -16,16 +16,17 @@ libraryDependencies ++= Seq(
   "org.apache.avro"             % "avro"              % "1.7.5",
   "com.force.api"               % "force-wsc"         % "33.0.1" exclude("org.antlr", "ST4"),
   "com.force.api"               % "force-partner-api" % "33.0.1",
-  "com.datadudes"               %% "wsdl2avro"        % "0.2-SNAPSHOT" changing(),
+  "co.datadudes"                %% "wsdl2avro"        % "0.2.1",
   "org.kitesdk"                 % "kite-hadoop-cdh5-dependencies" % "1.0.0" pomOnly()
     exclude("commons-beanutils", "commons-beanutils")
     exclude("org.slf4j", "slf4j-log4j12"),
   "org.kitesdk"                 % "kite-data-core"    % "1.0.0",
   "com.github.scopt"            %% "scopt"            % "3.3.0",
-  "org.specs2"                  %% "specs2-junit"     % "2.4.15"    % "test"
+  "org.specs2"                  %% "specs2-junit"     % "2.4.15"    % "test",
+  "org.specs2"                  %% "specs2-mock"      % "2.4.15"    % "test"
 )
 
-mainClass in assembly := Some("com.datadudes.sf2hadoop.SFImportCLIRunner")
+mainClass in assembly := Some("co.datadudes.sf2hadoop.SFImportCLIRunner")
 
 net.virtualvoid.sbt.graph.Plugin.graphSettings
 

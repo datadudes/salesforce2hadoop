@@ -1,31 +1,27 @@
-package com.datadudes.sf2hadoop
+package co.datadudes.sf2hadoop
 
 import java.util.Calendar
 
-import com.datadudes.sf2hadoop.Conversion._
-import com.datadudes.sf2hadoop.DatasetUtils._
-import com.datadudes.sf2hadoop.AvroUtils._
+import Conversion._
+import DatasetUtils._
+import AvroUtils._
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.avro.Schema
+import org.apache.avro.generic.GenericRecord
+import org.kitesdk.data.Dataset
+import com.sforce.soap.partner.sobject.SObject
 
 class SFImporter(recordSchemas: Map[String, Schema],
                  basePath: String,
-                 sfConnection: SalesforceConnection) extends LazyLogging {
+                 sfConnection: SalesforceService) extends LazyLogging {
 
   val fsBasePath = if(basePath.endsWith("/")) basePath else basePath + "/"
 
   def initialImport(recordType: String) = {
     val schema = recordSchemas(recordType)
     val dataset = initializeDataset(datasetUri(recordType), schema)
-    val writer = dataset.newWriter()
     val results = sfConnection.query(buildSFImportQuery(recordType, schema))
-    var i = 0
-    results.foreach { o =>
-      i = i + 1
-      if(i % 2000 == 0) logger.info(s"Processed $i records")
-      writer.write(sfRecord2AvroRecord(o, schema))
-    }
-    writer.close()
+    storeSFRecords(results, dataset)
   }
 
   def incrementalImport(recordType: String, from: Calendar, until: Calendar) = {
@@ -33,10 +29,13 @@ class SFImporter(recordSchemas: Map[String, Schema],
     val dataset = loadAndUpdateDataset(datasetUri(recordType), schema)
     val fieldList = getFieldNames(schema).mkString(",")
     val results = sfConnection.getUpdated(recordType, fieldList, from, until)
-    val writer = dataset.newWriter()
-    var i = 0
-    results.foreach { o =>
-      i = i + 1
+    storeSFRecords(results, dataset)
+  }
+
+  private def storeSFRecords(records: Iterator[SObject], target: Dataset[GenericRecord]): Unit = {
+    val writer = target.newWriter()
+    val schema = target.getDescriptor.getSchema
+    records.zipWithIndex.foreach { case (o, i) =>
       if(i % 2000 == 0) logger.info(s"Processed $i records")
       writer.write(sfRecord2AvroRecord(o, schema))
     }

@@ -1,4 +1,4 @@
-package com.datadudes.sf2hadoop
+package co.datadudes.sf2hadoop
 
 import com.sforce.soap.partner.sobject.SObject
 import org.apache.avro.Schema

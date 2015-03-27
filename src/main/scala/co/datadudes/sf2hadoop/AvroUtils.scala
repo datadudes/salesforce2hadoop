@@ -1,6 +1,6 @@
-package com.datadudes.sf2hadoop
+package co.datadudes.sf2hadoop
 
-import com.datadudes.wsdl2avro.WSDL2Avro.BasicNode
+import co.datadudes.wsdl2avro.WSDL2Avro.BasicNode
 import org.apache.avro.Schema
 import scala.collection.JavaConversions._
 

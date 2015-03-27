@@ -1,10 +1,10 @@
-package com.datadudes.sf2hadoop
+package co.datadudes.sf2hadoop
 
 import java.io.IOException
 import java.util.Calendar
 import javax.xml.bind.DatatypeConverter._
 
-import com.datadudes.sf2hadoop.SFImportCLIRunner.Config
+import SFImportCLIRunner.Config
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
 
