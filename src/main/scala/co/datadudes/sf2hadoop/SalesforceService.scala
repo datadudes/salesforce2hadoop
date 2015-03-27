@@ -28,7 +28,7 @@ class SalesforceService(connection: PartnerConnection)  {
 
   def getUpdated(recordType: String, fieldList: String, from: Calendar, until: Calendar) = new Iterator[SObject] {
 
-    private val ids = connection.getUpdated(recordType, from, until).getIds.grouped(2000).toIterator
+    private val ids = connection.getUpdated(recordType, from, until).getIds.grouped(2000)
     private var batch = if(ids.hasNext) connection.retrieve(fieldList, recordType, ids.next()).toIterator else Iterator.empty
 
     override def hasNext: Boolean =
