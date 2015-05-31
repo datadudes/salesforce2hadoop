@@ -2,7 +2,7 @@ name := "salesforce2hadoop"
 
 organization := "co.datadudes"
 
-version := "0.1-SNAPSHOT"
+version := "1.0"
 
 scalaVersion := "2.11.4"
 

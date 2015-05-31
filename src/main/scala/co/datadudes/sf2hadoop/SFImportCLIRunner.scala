@@ -18,9 +18,9 @@ object SFImportCLIRunner extends App with LazyLogging {
                     records: Seq[String] = Seq())
 
   val parser = new scopt.OptionParser[Config]("sf2hadoop") {
-    head("sf2hadoop", "0.1")
+    head("sf2hadoop", "1.0")
     cmd("init") required() action { (_, c) => c.copy(command = "init") } text "Initialize one or more new datasets and do initial full imports"
-    cmd("update") required() action { (_, c) => c.copy(command = "update") } text "Update on or more datasets using incremental imports"
+    cmd("update") required() action { (_, c) => c.copy(command = "update") } text "Update one or more datasets using incremental imports"
     note("\n")
     opt[String]('u', "username") required() action { (x, c) => c.copy(sfUsername = x)} text "Salesforce username"
     opt[String]('p', "password") required() action { (x, c) => c.copy(sfPassword = x)} text "Salesforce password"
