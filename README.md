@@ -154,7 +154,7 @@ requests are also very much appreciated!
 
 ## Authors
 
-Athena was created with passion by:
+Salesforce2hadoop was created with passion by:
 
 - [Daan Debie](https://github.com/DandyDev) - [Website](http://dandydev.net/)
 - [Marcel Krcah](https://github.com/mkrcah) - [Website](http://marcelkrcah.net/)
