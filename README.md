@@ -41,7 +41,7 @@ can just use `java -jar sf2hadoop.jar` to run the application. To see what optio
 $ java -jar sf2hadoop.jar --help
 ```
 
-In order for salesforce2hadoop to understand the structure of your Salesforce data, it has to read the Enterprise WSDL 
+In order for _salesforce2hadoop_ to understand the structure of your Salesforce data, it has to read the Enterprise WSDL 
 of your Salesforce organisation. You can find out [here](https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_quickstart_steps_generate_wsdl.htm) 
 how to generate and download it for your organisation.
 
@@ -77,21 +77,20 @@ directory, which is the record type _in lowercase_.
 
 **Record types**
 
-Provide `sf2hadoop` with the types of records you want to import from Salesforce. Specify the types as they are known in 
-the Salesforce API. Examples: `Account`, `Opportunity`, etc. Custom record types usually end with `__c`, for example: 
+Provide `sf2hadoop` with the types of records you want to import from Salesforce. Specify the types by their Salesforce API names. Examples: `Account`, `Opportunity`, etc. Custom record types usually end with `__c`, for example: 
 `Payment_Account__c`.
 
 **State**
 
-_Salesforce2hadoop_ will keep track of what record types have been imported at what point in time. This allows you to do 
-incremental imports only after the initial import. To make this possible, it will save the name of each record type that 
+_Salesforce2hadoop_ will keep track of what record types have been imported at what point in time. This allows you to switch 
+to incremental imports after the initial import. To make this possible, it will save the name of each record type that 
 is imported, together with an import date. When doing an incremental update of the data (see below), it will read back 
 the import states for each record type, and only request data from Salesforce that has been created/updated since that 
-moment.
+moment. After the incremental import, it will update the import date for each record type that was imported.
 
 The _statefile_ can be stored either in HDFS or on your local filesystem. As with the basePath, you have to specify the 
-path to the _statefile_ as a URI, following the guidelines above. The statefile will be created, including all non-existing 
-parent directories.
+path to the _statefile_ as a URI, following the guidelines above. The statefile will be created automatically, including all 
+non-existing parent directories.
 
 It is advised to store the _statefile_ on HDFS, so you can run `sf2hadoop` from any machine, without having to worry if 
 the proper _statefile_ is present.
