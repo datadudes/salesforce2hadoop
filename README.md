@@ -17,6 +17,8 @@ Features:
 - Built with the help of [KiteSDK](http://kitesdk.org/), Salesforce [WSC](https://github.com/forcedotcom/wsc) and our own [wsdl2avro](https://github.com/datadudes/wsdl2avro) library.
 - Built for the JVM, so works on any system that has Java 7 or greater installed
 
+More background information: http://dandydev.net/blog/getting-salesforce-data-into-hadoop
+
 ## Installation
 
 You can find compiled binaries [here on Github](https://github.com/datadudes/salesforce2hadoop/releases). Just download, 
