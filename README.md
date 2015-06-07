@@ -14,7 +14,7 @@ Features:
 - Do a complete import of your data, or incrementally import only the records that have been changed since your last import
 - Salesforce2hadoop keeps track for you of the last time each record type was imported.
 - Stores data into any filesystem that Hadoop/KiteSDK supports. Can be HDFS but also a local filesystem.
-- Built with the help of [KiteSDK](http://kitesdk.org/) and Salesforce [WSC](https://github.com/forcedotcom/wsc)
+- Built with the help of [KiteSDK](http://kitesdk.org/), Salesforce [WSC](https://github.com/forcedotcom/wsc) and our own [wsdl2avro](https://github.com/datadudes/wsdl2avro) library.
 - Built for the JVM, so works on any system that has Java 7 or greater installed
 
 ## Installation
