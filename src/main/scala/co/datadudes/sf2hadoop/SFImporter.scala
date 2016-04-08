@@ -36,7 +36,7 @@ class SFImporter(recordSchemas: Map[String, Schema],
     val writer = target.newWriter()
     val schema = target.getDescriptor.getSchema
     records.zipWithIndex.foreach { case (o, i) =>
-      if(i % 2000 == 0) logger.info(s"Processed $i records")
+      if(i % 2000 == 0) logger.info(s"Processes $i records")
       writer.write(sfRecord2AvroRecord(o, schema))
     }
     writer.close()
