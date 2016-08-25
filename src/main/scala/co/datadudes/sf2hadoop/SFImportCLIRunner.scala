@@ -15,6 +15,7 @@ object SFImportCLIRunner extends App with LazyLogging {
                     datasetBasePath: String = "",
                     sfWSDL: File = new File("."),
                     stateFile: URI = new URI("file://" + System.getProperty("user.home") + "/.sf2hadoop/state"),
+                    apiBaseUrl: String = "https://login.salesforce.com",
                     records: Seq[String] = Seq())
 
   val parser = new scopt.OptionParser[Config]("sf2hadoop") {
@@ -27,6 +28,7 @@ object SFImportCLIRunner extends App with LazyLogging {
     opt[String]('b', "basepath") required() action { (x, c) => c.copy(datasetBasePath = x)} text "Datasets basepath"
     opt[File]('w', "wsdl") required() valueName "<file>" action { (x, c) => c.copy(sfWSDL = x)} text "Path to Salesforce Enterprise WSDL"
     opt[URI]('s', "state") optional() valueName "<URI>" action { (x, c) => c.copy(stateFile = x)} text "URI to state file to keep track of last updated timestamps"
+    opt[String]('a', "api-base-url") optional() valueName "<URL>" action { (x, c) => c.copy(apiBaseUrl = x)} text "Base URL of Salesforce instance"
     arg[String]("<record>...") unbounded() action { (x, c) => c.copy(records = c.records :+ x)} text "List of Salesforce record types to import"
     help("help") text "prints this usage text"
   }
@@ -42,7 +44,7 @@ object SFImportCLIRunner extends App with LazyLogging {
       println("You need to enter a valid command (init|update)")
     } else {
       val schemas = WSDL2Avro.convert(config.sfWSDL.getCanonicalPath, filterSFInternalFields)
-      val connection = SalesforceService(config.sfUsername, config.sfPassword)
+      val connection = SalesforceService(config.sfUsername, config.sfPassword, config.apiBaseUrl)
       val importer = new SFImporter(schemas, config.datasetBasePath, connection)
       val state = new ImportState(config)
       state.createDirs

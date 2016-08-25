@@ -45,11 +45,11 @@ class SalesforceService(connection: PartnerConnection)  {
 }
 
 object SalesforceService {
-  def apply(username: String, password: String, apiVersion: String = "32.0") = {
+  def apply(username: String, password: String, apiBaseUrl: String = "https://login.salesforce.com", apiVersion: String = "32.0") = {
     val config = new ConnectorConfig()
     config.setUsername(username)
     config.setPassword(password)
-    config.setAuthEndpoint(s"https://login.salesforce.com/services/Soap/u/$apiVersion")
+    config.setAuthEndpoint(s"$apiBaseUrl/services/Soap/u/$apiVersion")
 
     val conn = Connector.newConnection(config)
     conn.setQueryOptions(2000)
