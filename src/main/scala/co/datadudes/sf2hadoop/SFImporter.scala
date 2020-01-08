@@ -17,10 +17,10 @@ class SFImporter(recordSchemas: Map[String, Schema],
 
   val fsBasePath = if(basePath.endsWith("/")) basePath else basePath + "/"
 
-  def initialImport(recordType: String) = {
+  def initialImport(recordType: String, months: String) = {
     val schema = recordSchemas(recordType)
     val dataset = initializeDataset(datasetUri(recordType), schema)
-    val results = sfConnection.query(buildSFImportQuery(recordType, schema))
+    val results = sfConnection.query(buildSFImportQuery(recordType, schema, months))
     storeSFRecords(results, dataset)
   }
 
@@ -42,9 +42,14 @@ class SFImporter(recordSchemas: Map[String, Schema],
     writer.close()
   }
 
-  private def buildSFImportQuery(recordType: String, schema: Schema): String = {
-    val fieldList = getFieldNames(schema).mkString(",")
-    s"SELECT $fieldList FROM $recordType ORDER BY CreatedDate DESC"
+  private def buildSFImportQuery(recordType: String, schema: Schema, months: String): String = {
+    if(months.isEmpty) {
+      val fieldList = getFieldNames(schema).mkString(",")
+      s"SELECT $fieldList FROM $recordType ORDER BY CreatedDate DESC"  
+    } else {
+      val fieldList = getFieldNames(schema).mkString(",")
+      s"SELECT $fieldList FROM $recordType where CreatedDate > LAST_N_MONTHS:$months ORDER BY CreatedDate DESC"
+    }
   }
 
   private def datasetUri(recordType: String) = s"dataset:$fsBasePath${recordType.toLowerCase}"

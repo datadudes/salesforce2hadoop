@@ -17,6 +17,7 @@ object SFImportCLIRunner extends App with LazyLogging {
                     stateFile: URI = new URI("file://" + System.getProperty("user.home") + "/.sf2hadoop/state"),
                     apiBaseUrl: String = "https://login.salesforce.com",
                     apiVersion: String = "37.0",
+                    months: String = "",
                     records: Seq[String] = Seq())
 
   val parser = new scopt.OptionParser[Config]("sf2hadoop") {
@@ -31,6 +32,7 @@ object SFImportCLIRunner extends App with LazyLogging {
     opt[URI]('s', "state") optional() valueName "<URI>" action { (x, c) => c.copy(stateFile = x)} text "URI to state file to keep track of last updated timestamps"
     opt[String]('a', "api-base-url") optional() valueName "<URL>" action { (x, c) => c.copy(apiBaseUrl = x)} text "Base URL of Salesforce instance"
     opt[String]('v', "api-version") optional() valueName "<number>" action { (x, c) => c.copy(apiVersion = x)} text "API version of Salesforce instance"
+    opt[String]('m', "months") optional() valueName "<months>" action { (x,c) => c.copy(months = x)} text "Number of months of data for an initial import"
     arg[String]("<record>...") unbounded() action { (x, c) => c.copy(records = c.records :+ x)} text "List of Salesforce record types to import"
     help("help") text "prints this usage text"
   }
@@ -56,7 +58,7 @@ object SFImportCLIRunner extends App with LazyLogging {
       if(config.command == "init") {
         val newStates = config.records.map { recordType =>
           val now = Calendar.getInstance()
-          importer.initialImport(recordType)
+          importer.initialImport(recordType, config.months)
           recordType -> now
         }.toMap
         val updatedStates = existingStates ++ newStates
